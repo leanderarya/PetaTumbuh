@@ -7,7 +7,7 @@
         <title inertia>{{ config('app.name', 'P3SA Kalangdosari') }}</title>
 
         {{-- PERBAIKAN: Mengubah favicon ke logo.png --}}
-        <link rel="icon" type="image/png" href="/storage/logo.png" />
+        <link rel="icon" type="image/png" href="/storage/logo2.png" />
 
         {{-- Font --}}
         <link rel="preconnect" href="https://fonts.bunny.net">

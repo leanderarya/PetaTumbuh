@@ -5,6 +5,93 @@
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
+/* Popup Container */
+.custom-swal-popup {
+    @apply w-full max-w-xs rounded-xl bg-white p-4 shadow-md sm:max-w-sm md:max-w-sm lg:max-w-md;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0.8;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Fade In Effect */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 2s ease-out forwards;
+}
+
+/* Typing effect */
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+.typing-effect {
+    display: inline-block;
+    overflow: hidden; /* Ensures no text gets cut off */
+    white-space: nowrap; /* Prevents line breaks */
+    border-right: 3px solid #333; /* Cursor effect */
+    width: 0; /* Start from width 0 */
+    animation:
+        typing 4s steps(30) 1s 1 normal both,
+        blink 0.75s step-end infinite;
+}
+
+@keyframes blink {
+    0% {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #333;
+    }
+    100% {
+        border-color: transparent;
+    }
+}
+
+/* Title */
+.custom-swal-title {
+    @apply text-center text-lg font-bold text-gray-800 sm:text-xl;
+}
+
+/* Content Text */
+.custom-swal-content {
+    @apply text-center text-sm text-gray-600 sm:text-base;
+}
+
+/* Tombol Konfirmasi */
+.custom-swal-confirm {
+    @apply mt-4 w-full rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 sm:mt-0 sm:w-auto;
+}
+
+/* Tombol Batal */
+.custom-swal-cancel {
+    @apply mt-2 w-full rounded bg-gray-100 px-4 py-2 font-medium text-gray-700 hover:bg-gray-200 sm:mt-0 sm:w-auto;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {

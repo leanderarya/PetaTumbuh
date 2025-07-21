@@ -79,14 +79,13 @@ export default function EbookPage({ ebooks }: { ebooks: Ebook[] }) {
             <Head title="P3SA - Katalog E-Book Pencegahan Stunting" />
 
             {/* Navbar */}
-            <nav className="sticky top-0 right-0 left-0 z-50 mx-auto mb-2 w-full max-w-5xl rounded-full bg-white/80 px-8 py-8 shadow-md backdrop-blur-md">
-                <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 sm:px-4">
+            <nav className="sticky top-0 right-0 left-0 z-50 mx-auto mb-2 w-full max-w-5xl bg-white/80 shadow-md backdrop-blur-md md:rounded-full">
+                <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
                         <img src="/storage/logo.png" alt="PetaTumbuh Logo" className="h-9 w-9 rounded-full object-contain shadow" />
-                        <h1 className="text-xl font-extrabold tracking-tight text-gray-800">
-                            <span className="bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">P3SA</span>
-                        </h1>
+                        {/* Menggunakan warna solid untuk kompatibilitas browser */}
+                        <h1 className="text-xl font-extrabold tracking-tight text-blue-600">P3SA</h1>
                     </div>
                     {/* Desktop Menu */}
                     <div className="hidden items-center space-x-8 font-semibold text-gray-600 md:flex">
@@ -107,7 +106,7 @@ export default function EbookPage({ ebooks }: { ebooks: Ebook[] }) {
                 </div>
                 {/* Mobile Dropdown */}
                 <div
-                    className={`absolute top-full left-0 w-full rounded-b-2xl bg-white/95 shadow-md transition-all duration-200 md:hidden ${open ? 'block' : 'hidden'}`}
+                    className={`absolute top-full left-0 w-full bg-white/95 shadow-md transition-all duration-200 md:hidden md:rounded-b-2xl ${open ? 'block' : 'hidden'}`}
                 >
                     <div className="flex flex-col items-center gap-2 py-3 text-base font-semibold text-gray-700">
                         <Link href={route('home')} className="w-full py-1 text-center hover:text-blue-600" onClick={() => setOpen(false)}>

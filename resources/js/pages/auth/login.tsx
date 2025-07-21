@@ -45,13 +45,13 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         <>
             <Head title="Log in" />
             <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
-                {/* Panel Kiri: Gambar dan Branding */}
+                {/* Panel Kiri: Gambar dan Branding (disembunyikan di mobile) */}
                 <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex">
                     <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/storage/dipakelagi.jpg')" }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-black/50" />
                     <div className="relative z-20 flex items-center text-lg font-medium">
                         <img src="/storage/logo.png" alt="P2SA Logo" className="mr-2 h-10 w-10 object-contain" />
-                        Tambuh Kalangdosari
+                        P2SA Kalangdosari
                     </div>
                     <div className="relative z-20 mt-auto">
                         <blockquote className="space-y-2">
@@ -64,15 +64,18 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     </div>
                 </div>
 
-                {/* Panel Kanan: Form Login */}
-                <div className="flex items-center justify-center py-12" style={{ backgroundImage: "url('/storage/bg-test.png')" }}>
-                    <div className="mx-auto grid w-[380px] gap-6 rounded-xl border bg-white/90 p-8 shadow-2xl backdrop-blur-sm">
+                {/* Panel Kanan: Form Login (menjadi layout utama di mobile) */}
+                <div
+                    className="flex min-h-screen items-center justify-center bg-cover bg-center p-4 lg:py-12"
+                    style={{ backgroundImage: "url('/storage/bg-test.png')" }}
+                >
+                    <div className="mx-auto w-full max-w-sm gap-6 rounded-xl border bg-white/90 p-8 shadow-2xl backdrop-blur-sm">
                         <div className="grid gap-2 text-center">
                             <h1 className="text-3xl font-bold">Login Petugas</h1>
                             <p className="text-balance text-muted-foreground">Masukkan email dan password Anda untuk mengakses dashboard.</p>
                         </div>
 
-                        <form className="grid gap-4" onSubmit={submit}>
+                        <form className="mt-6 grid gap-4" onSubmit={submit}>
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
@@ -127,13 +130,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                 Login
                             </Button>
                         </form>
-
-                        {/* <div className="mt-4 text-center text-sm">
-                            Belum punya akun?{' '}
-                            <TextLink href={route('register')} tabIndex={5}>
-                                Daftar
-                            </TextLink>
-                        </div> */}
 
                         {status && <div className="mt-4 text-center text-sm font-medium text-green-600">{status}</div>}
                     </div>

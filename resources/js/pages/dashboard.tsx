@@ -183,7 +183,7 @@ export default function Dashboard({ anakData, stats, dusunStats }: { anakData?: 
                     {/* Info Card */}
                     <div
                         className="relative flex min-h-[240px] flex-col justify-between overflow-hidden rounded-xl bg-cover bg-center p-5 text-white shadow-2xl sm:p-8 lg:col-span-2"
-                        style={{ backgroundImage: "url('/storage/anakanak.jpg')" }}
+                        style={{ backgroundImage: "url('/storage/pake.png')" }}
                     >
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-blue-900/60 to-transparent" />
                         <div className="relative z-10">

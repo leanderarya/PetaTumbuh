@@ -70,11 +70,11 @@ export default function ArtikelIndexPage({ artikels }: { artikels: Artikel[] }) 
             <Head title="P3SA - Katalog Artikel" />
             {/* Navbar */}
             <nav className="sticky top-0 right-0 left-0 z-50 mx-auto mb-2 w-full max-w-5xl bg-white/80 shadow-md backdrop-blur-md md:rounded-full">
-                <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
+                {/* Padding vertikal diubah dari py-3 menjadi py-4 */}
+                <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-8 sm:px-6">
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
                         <img src="/storage/logo.png" alt="PetaTumbuh Logo" className="h-9 w-9 rounded-full object-contain shadow" />
-                        {/* Menggunakan warna solid untuk kompatibilitas browser */}
                         <h1 className="text-xl font-extrabold tracking-tight text-blue-600">P3SA</h1>
                     </div>
                     {/* Desktop Menu */}

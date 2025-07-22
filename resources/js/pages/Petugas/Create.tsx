@@ -253,8 +253,8 @@ export default function ArtikelCreatePage({ artikels }: { artikels: Artikel[] })
                                     'alignright alignjustify | bullist numlist outdent indent | ' +
                                     'link image media table codesample | blockquote hr pagebreak | ' +
                                     'removeformat | fullscreen preview | help',
-                                images_upload_url: '/your-upload-handler', // <-- custom backend handler (opsional, jika ingin upload gambar)
-                                images_upload_credentials: true, // kirim cookie/session kalau perlu
+                                images_upload_url: '/your-upload-handler',
+                                images_upload_credentials: true,
                                 content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                                 placeholder: 'Tulis isi artikel di sini...',
                             }}
@@ -271,11 +271,29 @@ export default function ArtikelCreatePage({ artikels }: { artikels: Artikel[] })
                             id="image"
                             type="file"
                             accept="image/*"
-                            onChange={(e) => setData('image', e.target.files ? e.target.files[0] : null)}
+                            onChange={(e) => {
+                                const file = e.target.files ? e.target.files[0] : null;
+                                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                                if (file && file.size > maxSize) {
+                                    // === PERBAIKAN: Menggunakan Swal.fire untuk notifikasi ===
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Ukuran File Terlalu Besar',
+                                        text: 'Ukuran gambar tidak boleh melebihi 5MB. Silakan pilih file lain.',
+                                    });
+                                    // Reset input file agar file yang terlalu besar tidak terpilih
+                                    e.target.value = '';
+                                    setData('image', null);
+                                    return;
+                                }
+                                setData('image', file);
+                            }}
                             className="w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:font-semibold file:text-blue-700 hover:file:bg-blue-200"
                         />
                         {isEditing && <p className="mt-1 text-xs text-gray-500">Kosongkan jika tidak ingin mengubah gambar.</p>}
                         {errors.image && <div className="mt-1 text-sm text-red-600">{errors.image}</div>}
+                        <p className="mt-1 text-xs text-gray-500">Maksimal ukuran gambar 5MB.</p>
                     </div>
 
                     {/* Checkbox NEW */}

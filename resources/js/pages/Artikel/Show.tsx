@@ -1,7 +1,7 @@
 'use client';
 
 import { Head, Link } from '@inertiajs/react';
-import { Menu, X } from 'lucide-react';
+import { Heart, Menu, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 // --- Type Definitions ---
@@ -55,7 +55,6 @@ export default function ArtikelShowPage({ artikel, otherArticles }: { artikel: A
 
             {/* Navbar */}
             <nav className="sticky top-0 right-0 left-0 z-50 mx-auto mb-2 w-full max-w-5xl bg-white/80 shadow-md backdrop-blur-md md:rounded-full">
-                {/* Padding vertikal diubah dari py-3 menjadi py-4 */}
                 <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-8 sm:px-6">
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
@@ -115,11 +114,9 @@ export default function ArtikelShowPage({ artikel, otherArticles }: { artikel: A
                     </header>
 
                     {/* Kartu Konten Putih */}
-                    <div className="relative z-30 mx-auto -mt-8 max-w-5xl rounded-t-2xl bg-white p-8 shadow-2xl md:p-12">
+                    <div className="relative z-30 mx-auto -mt-4 max-w-5xl rounded-t-2xl bg-white p-8 shadow-2xl md:p-12">
                         {/* Wrapper untuk isi konten */}
-                        {/* === PERBAIKAN SAFARI 2: Menambahkan warna teks eksplisit di sini === */}
                         <div className="mx-auto max-w-3xl text-gray-800">
-                            {/* Styling tipografi otomatis dari @tailwindcss/typography */}
                             <div
                                 className="prose prose-lg prose-indigo prose-p:leading-relaxed prose-a:text-blue-600 hover:prose-a:text-blue-500 max-w-none"
                                 dangerouslySetInnerHTML={{ __html: artikel.content }}
@@ -152,20 +149,16 @@ export default function ArtikelShowPage({ artikel, otherArticles }: { artikel: A
             <footer className="mt-8 border-t bg-white px-4 pt-8 pb-4 text-center text-sm text-gray-500">
                 <div className="mx-auto flex max-w-3xl flex-col items-center gap-2">
                     <img src="/storage/logo.png" alt="Logo P3SA" className="mb-1 h-9 w-9 object-contain" />
-                    <div className="font-semibold text-gray-700">P2SA Kalangdosari</div>
+                    <div className="font-semibold text-gray-700">P3SA Kalangdosari</div>
                     <div className="mb-2 text-xs text-gray-400">Portal Pencegahan & Penanganan Stunting Anak</div>
-                    <div className="flex justify-center gap-4 text-xs">
-                        <a href={route('home')} className="transition hover:text-blue-500">
-                            Beranda
-                        </a>
-                        <a href={route('artikel.index')} className="transition hover:text-blue-500">
-                            Artikel
-                        </a>
-                        <a href={route('ebook')} className="transition hover:text-blue-500">
-                            E-Book
-                        </a>
+                    <p className="mt-3 text-xs text-gray-400">&copy; 2025 P3SA Kalangdosari. Hak Cipta Dilindungi.</p>
+
+                    {/* Add Made with Love text with heart icon */}
+                    <div className="mt-4 flex items-center justify-center text-xs text-gray-500">
+                        <span className="mr-2">Made with</span>
+                        <Heart className="text-red-500" />
+                        <span className="ml-2">by KKN-T 116 Universitas Diponegoro</span>
                     </div>
-                    <p className="mt-3 text-xs text-gray-400">&copy; 2025 P2SA Kalangdosari. Hak Cipta Dilindungi.</p>
                 </div>
             </footer>
         </div>

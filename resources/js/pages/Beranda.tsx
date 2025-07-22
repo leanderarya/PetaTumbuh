@@ -1,7 +1,7 @@
 'use client';
 
 import { Head, Link } from '@inertiajs/react';
-import { Menu, X } from 'lucide-react';
+import { Heart, Menu, X } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import CountUp from 'react-countup';
 
@@ -76,7 +76,7 @@ const SlideshowWithDescription: React.FC = () => {
 const StatsCard: React.FC<{ stat: DusunStat; isInView: boolean }> = memo(({ stat, isInView }) => (
     <div className="flex flex-col items-center rounded-xl bg-white p-5 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl">
         <h3 className="text-xl font-semibold text-gray-800">{stat.desa}</h3>
-        <div className="mt-2 text-3xl font-extrabold text-blue-600">
+        <div className="mt-2 font-sans text-3xl font-extrabold text-black">
             {isInView ? <CountUp start={0} end={stat.jumlah_anak} duration={2.2} separator="," /> : '0'}
         </div>
         <p className="mt-1 text-sm text-gray-600">Jumlah Anak Terindikasi Stunting</p>
@@ -174,34 +174,34 @@ const Beranda: React.FC<{ dusunStats: DusunStat[]; artikels: ArtikelPreview[] }>
             {/* Main Section */}
             <main className="mt-4 sm:mt-8">
                 <div
-                    className="relative mb-10 flex min-h-[320px] w-full items-center justify-center overflow-hidden rounded-xl bg-cover bg-center shadow-xl sm:min-h-[420px] lg:min-h-[65vh]"
+                    className="relative mb-10 flex w-full items-center justify-center overflow-hidden rounded-xl bg-cover bg-center shadow-xl sm:min-h-[420px] lg:min-h-[65vh]"
                     style={{ backgroundImage: `url('/storage/dipakelagi.jpg')` }}
                 >
                     <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
-                    <div className="animate-fade-in relative z-20 px-3 text-center sm:px-4">
-                        <div className="mx-auto max-w-2xl rounded-3xl bg-white/90 p-6 shadow-2xl backdrop-blur-xs sm:max-w-3xl sm:p-10">
-                            <h1 className="text-2xl leading-tight font-extrabold tracking-tight text-gray-800 sm:text-4xl md:text-5xl">
+                    <div className="animate-fade-in relative z-20 px-4 text-center sm:px-6 lg:px-8">
+                        <div className="mx-auto max-w-2xl rounded-3xl bg-white/90 p-6 shadow-2xl backdrop-blur-xs sm:max-w-3xl sm:p-10 lg:max-w-4xl lg:p-12">
+                            <h1 className="text-2xl leading-tight font-extrabold tracking-tight text-gray-800 sm:text-3xl md:text-4xl lg:text-5xl">
                                 <span className="bg-gradient-to-r from-blue-700 via-sky-500 to-cyan-400 bg-clip-text text-transparent">
                                     Pemantauan Stunting Anak
                                 </span>{' '}
-                                Melalui Peta Interaktif
+                                Melalui Pemetaan Akurat dan Sumber Daya Edukatif
                             </h1>
-                            <p className="mt-3 text-base text-gray-700 sm:mt-4 sm:text-lg">
-                                Sistem ini membantu masyarakat Desa Kalangdosari dan tenaga kesehatan dalam pencegahan stunting dengan informasi
-                                akurat dan akses mudah.
+                            <p className="mt-3 text-base text-gray-700 sm:mt-4 sm:text-base md:text-xl lg:text-xl">
+                                Dapatkan informasi terbaru tentang stunting melalui pemetaan interaktif serta akses ke artikel dan e-book yang
+                                bermanfaat untuk pencegahan stunting di Desa Kalangdosari.
                             </p>
-                            <div className="mt-6 flex flex-col justify-center gap-3 sm:mt-8 sm:flex-row sm:gap-4">
+                            <div className="mx-auto mt-6 flex flex-col justify-center gap-3 sm:mt-8 sm:flex-row sm:gap-4 lg:gap-6">
                                 <button
                                     type="button"
                                     onClick={handleScrollToMap}
-                                    className="rounded-md bg-blue-600 px-8 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-105"
+                                    className="rounded-md bg-blue-600 px-8 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-105 sm:px-6 md:px-8 lg:px-10"
                                 >
                                     Lihat Peta Persebaran
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => (window.location.href = route('ebook'))}
-                                    className="rounded-md border border-blue-500 bg-white px-8 py-3 font-semibold text-blue-600 shadow-lg transition-all hover:scale-105 hover:bg-blue-50"
+                                    className="rounded-md border border-blue-500 bg-white px-8 py-3 font-semibold text-blue-600 shadow-lg transition-all hover:scale-105 hover:bg-blue-50 sm:px-6 md:px-8 lg:px-10"
                                 >
                                     Akses E-Book Edukasi
                                 </button>
@@ -211,26 +211,43 @@ const Beranda: React.FC<{ dusunStats: DusunStat[]; artikels: ArtikelPreview[] }>
                 </div>
                 <div ref={statsSectionRef} className="mb-10">
                     <h2 className="mb-7 text-center text-2xl font-bold text-gray-800 sm:text-3xl">Statistik Stunting per Dusun</h2>
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         {dusunStats.map((stat) => (
                             <StatsCard key={stat.desa} stat={stat} isInView={isInView} />
                         ))}
                     </div>
                 </div>
-                <div id="peta-interaktif" className="mb-10 flex flex-col gap-8 md:flex-row">
-                    <div className="w-full rounded-xl bg-white p-5 shadow-xl md:w-1/2">
-                        <h2 className="mb-4 text-2xl font-bold text-gray-800 sm:text-3xl">Apa Itu Stunting?</h2>
-                        <p className="text-justify text-base leading-relaxed text-gray-700">
-                            Stunting adalah masalah kurang gizi kronis yang disebabkan oleh asupan gizi yang kurang dalam waktu cukup lama. Kondisi
-                            ini tidak hanya menyebabkan hambatan pertumbuhan fisik, tetapi juga mengancam perkembangan kognitif yang akan berpengaruh
-                            pada tingkat kecerdasan dan produktivitas anak di masa depan. Pemantauan dini sangat penting untuk pencegahan.
+                {/* Info dan Peta Section */}
+                <div id="peta-interaktif" className="mb-10 flex flex-col gap-10 md:flex-row">
+                    {/* Kolom Kiri: Penjelasan */}
+                    <div className="w-full rounded-xl bg-white p-6 shadow-lg md:w-1/2">
+                        <h2 className="mb-5 text-3xl leading-tight font-extrabold text-gray-800 sm:text-4xl">
+                            Mengenal Stunting, Melindungi Masa Depan
+                        </h2>
+                        <p className="mb-6 text-justify text-lg leading-relaxed font-medium text-gray-700">
+                            Stunting bukan sekadar masalah tinggi badan. Ini adalah kondisi gagal tumbuh akibat kekurangan gizi kronis yang dapat
+                            menghambat perkembangan otak dan fisik anak secara permanen. Dampaknya tidak hanya terasa saat ini, tetapi juga
+                            memengaruhi kecerdasan dan produktivitas mereka di masa depan.
+                        </p>
+
+                        <h3 className="mt-8 mb-4 text-2xl leading-tight font-semibold text-gray-800 sm:text-3xl">
+                            Misi Kita Bersama di Kalangdosari
+                        </h3>
+                        <p className="text-justify text-lg leading-relaxed font-medium text-gray-700">
+                            Melalui platform ini, kita memetakan kondisi gizi di setiap dusun secara akurat. Data ini bukanlah sekadar angka,
+                            melainkan panduan bagi kita untuk mengambil tindakan yang cepat dan tepat sasaran. Dengan pemantauan rutin dan akses ke
+                            sumber edukasi, kita berdaya untuk memastikan setiap anak mendapatkan awal terbaik dalam hidupnya dan tumbuh menjadi
+                            generasi yang sehat dan cerdas.
                         </p>
                     </div>
-                    <div className="w-full rounded-xl bg-white p-5 shadow-xl md:w-1/2">
-                        <h2 className="mb-4 text-2xl font-bold text-gray-800 sm:text-3xl">Perkembangan Data Stunting</h2>
+
+                    {/* Kolom Kanan: Slideshow Peta */}
+                    <div className="w-full rounded-xl bg-white p-6 shadow-lg md:w-1/2">
+                        <h2 className="mb-5 text-3xl leading-tight font-extrabold text-gray-800 sm:text-4xl">Perkembangan Data Stunting</h2>
                         <SlideshowWithDescription />
                     </div>
                 </div>
+
                 {/* === SECTION ARTIKEL BARU === */}
                 <div className="mb-8">
                     <div className="mb-6 text-center">
@@ -249,18 +266,14 @@ const Beranda: React.FC<{ dusunStats: DusunStat[]; artikels: ArtikelPreview[] }>
                     <img src="/storage/logo.png" alt="Logo P3SA" className="mb-1 h-9 w-9 object-contain" />
                     <div className="font-semibold text-gray-700">P3SA Kalangdosari</div>
                     <div className="mb-2 text-xs text-gray-400">Portal Pencegahan & Penanganan Stunting Anak</div>
-                    <div className="flex justify-center gap-4 text-xs">
-                        <a href={route('home')} className="transition hover:text-blue-500">
-                            Beranda
-                        </a>
-                        <a href={route('artikel.index')} className="transition hover:text-blue-500">
-                            Artikel
-                        </a>
-                        <a href={route('ebook')} className="transition hover:text-blue-500">
-                            E-Book
-                        </a>
-                    </div>
                     <p className="mt-3 text-xs text-gray-400">&copy; 2025 P3SA Kalangdosari. Hak Cipta Dilindungi.</p>
+
+                    {/* Add Made with Love text with heart icon */}
+                    <div className="mt-4 flex items-center justify-center text-xs text-gray-500">
+                        <span className="mr-2">Made with</span>
+                        <Heart className="text-red-500" />
+                        <span className="ml-2">by KKN-T 116 Universitas Diponegoro</span>
+                    </div>
                 </div>
             </footer>
         </div>

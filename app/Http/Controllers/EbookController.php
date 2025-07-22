@@ -66,8 +66,8 @@ class EbookController extends Controller
         $request->validate([
             'title' => 'required|string|max:255|unique:ebooks,title,' . $id,
             'description' => 'required|string',
-            'file' => 'nullable|mimes:pdf|max:40120', // Keep the same for file
-            'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:20480', // Set the max size to 20MB (20480 KB)
+            'file' => 'nullable|mimes:pdf|max:50120', // Keep the same for file
+            'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:5048', // Set the max size to 20MB (20480 KB)
             'is_new' => 'boolean',
         ]);
 
@@ -111,8 +111,8 @@ class EbookController extends Controller
         $request->validate([
             'title' => 'required|string|max:255|unique:ebooks,title',
             'description' => 'required|string',
-            'file' => 'required|mimes:pdf|max:40120',
-            'cover' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'file' => 'required|mimes:pdf|max:50120',
+            'cover' => 'required|image|mimes:jpg,jpeg,png|max:5048',
             'is_new' => 'boolean',
         ]);
 

@@ -5,7 +5,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Baby, BarChart3, HeartPulse, MapPin, Star, User } from 'lucide-react';
+import { Baby, BarChart3, Heart, HeartPulse, MapPin, User } from 'lucide-react';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import CountUp from 'react-countup';
 
@@ -86,11 +86,6 @@ const DusunStatCard: React.FC<{ stat: DusunStat; isInView: boolean; idx: number 
         <div className="mb-2 flex items-center justify-center gap-1">
             <User className="h-5 w-5 text-blue-600" />
             <span className="font-semibold text-blue-800">{stat.desa}</span>
-            {stat.jumlah_anak > 20 && (
-                <span className="ml-2 flex animate-bounce items-center gap-1 rounded-full bg-yellow-400 px-2 py-0.5 text-xs font-bold text-white">
-                    <Star className="h-3 w-3" /> Banyak!
-                </span>
-            )}
         </div>
         <div className="animate-fade-in text-4xl font-extrabold text-blue-800 drop-shadow-md">
             {isInView ? <CountUp start={0} end={stat.jumlah_anak} duration={2} separator="," /> : '0'}
@@ -229,27 +224,19 @@ export default function Dashboard({ anakData, stats, dusunStats }: { anakData?: 
                         ))}
                     </div>
                 </div>
-
                 <footer className="mt-auto border-t bg-white px-4 pt-8 pb-4 text-center text-sm text-gray-500">
                     <div className="mx-auto flex max-w-3xl flex-col items-center gap-2">
                         <img src="/storage/logo.png" alt="Logo P3SA" className="mb-1 h-9 w-9 object-contain" />
-                        <div className="font-semibold text-gray-700">Tambuh Kalangdosari</div>
-                        <div className="mb-2 text-xs text-gray-400">Peta Tumbuh Kalangdosari</div>
-                        <div className="flex justify-center gap-4 text-xs">
-                            <a href={route('dashboard')} className="transition hover:text-blue-500">
-                                Dashboard
-                            </a>
-                            <a href={route('children.index')} className="transition hover:text-blue-500">
-                                Daftar Anak
-                            </a>
-                            <a href={route('ebooks.petugasIndex')} className="transition hover:text-blue-500">
-                                Manajemen E-Book
-                            </a>
-                            <a href={route('artikel.create')} className="transition hover:text-blue-500">
-                                Manajemen Artikel
-                            </a>
+                        <div className="font-semibold text-gray-700">P3SA Kalangdosari</div>
+                        <div className="mb-2 text-xs text-gray-400">Portal Pencegahan & Penanganan Stunting Anak</div>
+                        <p className="mt-3 text-xs text-gray-400">&copy; 2025 P3SA Kalangdosari. Hak Cipta Dilindungi.</p>
+
+                        {/* Add Made with Love text with heart icon */}
+                        <div className="mt-4 flex items-center justify-center text-xs text-gray-500">
+                            <span className="mr-2">Made with</span>
+                            <Heart className="text-red-500" />
+                            <span className="ml-2">by KKN-T 116 Universitas Diponegoro</span>
                         </div>
-                        <p className="mt-3 text-xs text-gray-400">&copy; 2025 Tambuh Kalangdosari. Hak Cipta Dilindungi.</p>
                     </div>
                 </footer>
             </div>

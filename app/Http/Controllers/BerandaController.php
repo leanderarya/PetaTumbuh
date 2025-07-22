@@ -20,8 +20,10 @@ class BerandaController extends Controller
         // Fetch children data (sudah ada)
         $children = Child::all();
 
-        // Menampilkan Jumlah_anak (sudah ada)
-        $dusunStats = DB::table('children')->select('desa', DB::raw('count(*) as jumlah_anak'))
+    // Menampilkan Jumlah_anak yang berstatus gizi 'Kurang' atau 'Bawah Garis Merah'
+    $dusunStats = DB::table('children')
+        ->whereIn('status_gizi', ['Kurang', 'Bawah Garis Merah'])
+        ->select('desa', DB::raw('count(*) as jumlah_anak'))
         ->groupBy('desa')
         ->get();
 

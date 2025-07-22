@@ -84,7 +84,7 @@ class ArtikelController extends Controller
             'date' => 'required|date',
             'content' => 'required|string',
             'is_new' => 'boolean',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -112,7 +112,7 @@ class ArtikelController extends Controller
             'content' => 'required|string',
             'is_new' => 'boolean',
             // Gambar tidak wajib saat update
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
         ]);
 
         // Cek jika ada file gambar baru yang di-upload

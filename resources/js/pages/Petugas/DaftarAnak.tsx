@@ -6,7 +6,7 @@ import { Head, router, useForm } from '@inertiajs/react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Eye, FilePenLine, Trash2 } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import Swal from 'sweetalert2';
 
@@ -86,17 +86,26 @@ export default function DaftarAnakPage({ children }: { children: Anak[] }) {
     const [editId, setEditId] = useState<number | null>(null);
     const formRef = useRef<HTMLFormElement | null>(null);
 
+    // --- State untuk Filter dan Paginasi ---
     const [search, setSearch] = useState('');
+    const [dusunFilter, setDusunFilter] = useState(''); // State baru untuk filter dusun
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    // Filter data sesuai pencarian nama
-    const filteredData = children.filter((anak) => anak.nama.toLowerCase().includes(search.toLowerCase()));
+    // --- Logika Filter dan Paginasi ---
+    const filteredData = useMemo(() => {
+        return children.filter((anak) => {
+            const searchMatch = anak.nama.toLowerCase().includes(search.toLowerCase());
+            const dusunMatch = !dusunFilter || anak.desa === dusunFilter;
+            return searchMatch && dusunMatch;
+        });
+    }, [children, search, dusunFilter]);
 
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
     const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    const handlePageChange = (page: number) => setCurrentPage(page);
+    // Ambil daftar dusun unik dari data untuk dropdown filter
+    const dusunList = useMemo(() => [...new Set(children.map((anak) => anak.desa))].sort(), [children]);
 
     const { data, setData, post, put, processing, reset, errors } = useForm<FormData>({
         nama: '',
@@ -223,7 +232,7 @@ export default function DaftarAnakPage({ children }: { children: Anak[] }) {
         };
 
         if (isEditing && editId) {
-            put(route('children.update', editId), {
+            put(route('children.update', editId!), {
                 ...data,
                 onSuccess,
             });
@@ -486,64 +495,66 @@ export default function DaftarAnakPage({ children }: { children: Anak[] }) {
                     </div>
                 )}
 
-                {/* --- Pencarian Anak --- */}
-                <div className="mb-2 max-w-xs">
-                    <input
-                        type="text"
-                        placeholder="Cari nama anak..."
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                        className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                    />
-                </div>
-                {/* --- Tabel Daftar Anak --- */}
+                {/* --- Filter & Daftar Anak --- */}
                 <div className="overflow-hidden rounded-xl border bg-white shadow">
-                    <table className="hidden w-full overflow-hidden rounded-xl bg-white text-sm shadow md:table">
-                        <thead>
-                            <tr className="bg-gradient-to-r from-blue-100 to-cyan-50 text-xs font-bold text-blue-800 uppercase">
-                                <th className="px-4 py-3 text-left">Nama</th>
-                                <th className="px-4 py-3 text-left">Usia</th>
-                                <th className="px-4 py-3 text-left">JK</th>
-                                <th className="px-4 py-3 text-left">Dusun</th>
-                                <th className="px-4 py-3 text-left">Status Gizi</th>
-                                <th className="px-4 py-3 text-left">Update</th>
+                    <div className="flex flex-col items-start gap-4 border-b bg-gray-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                        <h2 className="text-lg font-semibold text-gray-800">Daftar Anak Terdata</h2>
+                        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                            <input
+                                type="text"
+                                placeholder="Cari nama anak..."
+                                value={search}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 sm:w-auto"
+                            />
+                            <select
+                                value={dusunFilter}
+                                onChange={(e) => {
+                                    setDusunFilter(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 sm:w-auto"
+                            >
+                                <option value="">Semua Dusun</option>
+                                {dusunList.map((dusun) => (
+                                    <option key={dusun} value={dusun}>
+                                        {dusun}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* TABEL DESKTOP */}
+                    <table className="hidden w-full text-left text-sm md:table">
+                        <thead className="bg-gray-50 text-xs text-gray-700 uppercase">
+                            <tr>
+                                <th className="px-4 py-3">Nama</th>
+                                <th className="px-4 py-3">Usia</th>
+                                <th className="px-4 py-3">BB / TB</th>
+                                <th className="px-4 py-3">Jenis Kelamin</th>
+                                <th className="px-4 py-3">Dusun</th>
+                                <th className="px-4 py-3">Status Gizi</th>
+                                <th className="px-4 py-3">Diperbarui</th>
                                 <th className="px-4 py-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {paginatedData.map((anak, idx) => (
-                                <tr key={anak.id} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-blue-50'} group transition hover:bg-blue-100/80`}>
-                                    <td className="flex items-center gap-2 px-4 py-3 font-semibold">
-                                        <span className="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-200 font-bold text-blue-800 shadow-sm">
-                                            {anak.nama?.charAt(0)}
-                                        </span>
-                                        <span className="max-w-[150px] truncate">{anak.nama}</span>
-                                    </td>
+                            {paginatedData.map((anak) => (
+                                <tr key={anak.id} className="border-t hover:bg-blue-50/50">
+                                    <td className="px-4 py-3 font-semibold">{anak.nama}</td>
                                     <td className="px-4 py-3">{anak.usia} bln</td>
-                                    <td className="flex items-center gap-1 px-4 py-3">
-                                        {anak.jenis_kelamin === 'L' ? (
-                                            <>
-                                                <span className="inline-block text-blue-500"></span> Laki-laki
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span className="inline-block text-pink-400"></span> Perempuan
-                                            </>
-                                        )}
+                                    <td className="px-4 py-3">
+                                        {anak.berat_badan} kg / {anak.tinggi_badan} cm
                                     </td>
+                                    <td className="px-4 py-3">{anak.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
                                     <td className="px-4 py-3">{anak.desa}</td>
                                     <td className="px-4 py-3">
                                         <span
-                                            className={`inline-block rounded-full px-3 py-1 text-xs font-semibold shadow-sm ${
-                                                anak.status_gizi === 'Baik'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : anak.status_gizi.toLowerCase().includes('kurang')
-                                                      ? 'bg-yellow-100 text-yellow-800'
-                                                      : 'bg-red-100 text-red-800'
-                                            }`}
+                                            className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${anak.status_gizi === 'Baik' ? 'bg-green-100 text-green-800' : anak.status_gizi.toLowerCase().includes('kurang') ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}
                                         >
                                             {anak.status_gizi}
                                         </span>
@@ -555,56 +566,55 @@ export default function DaftarAnakPage({ children }: { children: Anak[] }) {
                                             year: 'numeric',
                                         })}
                                     </td>
-                                    <td className="px-4 py-3 text-center">
-                                        <div className="inline-flex gap-2">
-                                            <button
-                                                onClick={() => openDetailModal(anak)}
-                                                className="rounded-md bg-blue-500 p-2 text-white shadow transition hover:bg-blue-600"
-                                                title="Lihat Detail"
-                                            >
-                                                <Eye size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleEdit(anak)}
-                                                className="rounded-md bg-yellow-400 p-2 text-white shadow transition hover:bg-yellow-500"
-                                                title="Edit"
-                                            >
-                                                <FilePenLine size={16} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(anak.id)}
-                                                className="rounded-md bg-red-500 p-2 text-white shadow transition hover:bg-red-600"
-                                                title="Hapus"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
+                                    <td className="space-x-2 px-4 py-3 text-center">
+                                        <button
+                                            onClick={() => openDetailModal(anak)}
+                                            className="rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
+                                        >
+                                            <Eye size={16} />
+                                        </button>
+                                        <button onClick={() => handleEdit(anak)} className="rounded bg-yellow-500 p-2 text-white hover:bg-yellow-600">
+                                            <FilePenLine size={16} />
+                                        </button>
+                                        <button onClick={() => handleDelete(anak.id)} className="rounded bg-red-500 p-2 text-white hover:bg-red-600">
+                                            <Trash2 size={16} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-
                     {/* MOBILE CARD LIST */}
                     <div className="flex flex-col gap-4 p-4 md:hidden">
                         {paginatedData.map((anak) => (
-                            <div key={anak.id} className="rounded-lg border bg-blue-50 p-4 shadow-sm">
-                                <div className="text-lg font-semibold">{anak.nama}</div>
-                                <div className="mb-1 text-sm text-gray-700">
-                                    Usia: <span className="font-medium">{anak.usia} bln</span>
+                            <div key={anak.id} className="rounded-lg border bg-gray-50 p-4 shadow-sm">
+                                <div className="mb-2 flex items-center justify-between">
+                                    <div className="text-lg font-semibold text-gray-800">{anak.nama}</div>
+                                    <div className="text-xs text-gray-500">
+                                        Diperbarui: {new Date(anak.updated_at ?? '').toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}
+                                    </div>
                                 </div>
-                                <div className="mb-1 text-sm text-gray-700">
-                                    Jenis Kelamin: {anak.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-gray-700">
+                                    <div>
+                                        Usia: <span className="font-medium">{anak.usia} bln</span>
+                                    </div>
+                                    <div>
+                                        Dusun: <span className="font-medium">{anak.desa}</span>
+                                    </div>
+                                    <div>
+                                        BB/TB:{' '}
+                                        <span className="font-medium">
+                                            {anak.berat_badan} kg / {anak.tinggi_badan} cm
+                                        </span>
+                                    </div>
+                                    <div>
+                                        JK: <span className="font-medium">{anak.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</span>
+                                    </div>
+                                    <div className="col-span-2">
+                                        Status Gizi: <span className="font-bold">{anak.status_gizi}</span>
+                                    </div>
                                 </div>
-                                <div className="mb-1 text-sm text-gray-700">Dusun: {anak.desa}</div>
-                                <div className="mb-1 text-sm text-gray-700">
-                                    Status Gizi: <span className="font-bold">{anak.status_gizi}</span>
-                                </div>
-                                <div className="mb-2 text-xs text-gray-500">
-                                    Diperbarui:{' '}
-                                    {new Date(anak.updated_at ?? '').toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                </div>
-                                <div className="flex gap-2">
+                                <div className="mt-3 flex justify-end gap-2 border-t pt-3">
                                     <button onClick={() => openDetailModal(anak)} className="rounded bg-blue-500 p-2 text-white hover:bg-blue-600">
                                         <Eye size={16} />
                                     </button>
@@ -618,22 +628,32 @@ export default function DaftarAnakPage({ children }: { children: Anak[] }) {
                             </div>
                         ))}
                     </div>
-                </div>
 
-                {/* PAGINATION */}
-                {totalPages > 1 && (
-                    <div className="mt-4 flex items-center justify-center gap-2">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                            <button
-                                key={page}
-                                onClick={() => handlePageChange(page)}
-                                className={`rounded-full border px-3 py-1 text-sm font-semibold ${page === currentPage ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-300 bg-white text-blue-600'} transition hover:bg-blue-50`}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                    </div>
-                )}
+                    {/* PAGINATION */}
+                    {totalPages > 1 && (
+                        <div className="flex flex-col items-center justify-between gap-2 border-t px-4 py-3 text-sm text-gray-600 md:flex-row">
+                            <span>
+                                Halaman {currentPage} dari {totalPages}
+                            </span>
+                            <div className="inline-flex items-center -space-x-px">
+                                <button
+                                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className="rounded-l-md border px-3 py-1 hover:bg-gray-100 disabled:opacity-40"
+                                >
+                                    Sebelumnya
+                                </button>
+                                <button
+                                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    className="rounded-r-md border px-3 py-1 hover:bg-gray-100 disabled:opacity-40"
+                                >
+                                    Selanjutnya
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 {/* MODAL DETAIL */}
                 {isDetailOpen && selectedChild && (

@@ -81,26 +81,36 @@ export default function FormEbook({ editingEbook, ebooks }: Props) {
         if (data.file) formData.append('file', data.file);
         if (data.cover) formData.append('cover', data.cover);
 
+        const onSuccess = (message: string) => {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: message,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+            reset();
+            setCoverPreview(null);
+            setSelectedEbookId(null);
+        };
+
+        const onError = () => {
+            Swal.fire('Gagal', 'Terjadi kesalahan. Periksa kembali isian form Anda.', 'error');
+        };
+
         if (selectedEbookId) {
-            // PATCH/PUT dengan FormData harus lewat POST + _method=PUT
             formData.append('_method', 'PUT');
             router.post(`/ebooks/${selectedEbookId}`, formData, {
                 forceFormData: true,
-                onSuccess: () => {
-                    Swal.fire('Berhasil!', 'E-Book berhasil diperbarui.', 'success');
-                    reset();
-                    setCoverPreview(null);
-                    setSelectedEbookId(null);
-                },
+                onSuccess: () => onSuccess('E-Book berhasil diperbarui!'),
+                onError,
             });
         } else {
             post(route('ebooks.store'), {
                 forceFormData: true,
-                onSuccess: () => {
-                    Swal.fire('Berhasil!', 'E-Book berhasil diunggah!', 'success');
-                    reset();
-                    setCoverPreview(null);
-                },
+                onSuccess: () => onSuccess('E-Book berhasil diunggah!'),
+                onError,
             });
         }
     };
@@ -134,14 +144,21 @@ export default function FormEbook({ editingEbook, ebooks }: Props) {
         });
         setCoverPreview(ebook.image);
         setSelectedEbookId(ebook.id);
-        Swal.fire('Mode Edit', 'Silakan ubah data lalu klik simpan.', 'info');
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'info',
+            title: 'Mode Edit Aktif',
+            showConfirmButton: false,
+            timer: 3000,
+        });
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Upload E-Book Edukasi" />
             <div className="mx-auto w-full max-w-4xl rounded-2xl bg-white p-4 shadow-lg sm:p-8">
-                <h1 className="mb-6 text-xl font-bold text-blue-800 sm:text-2xl">📘 Upload E-Book Edukasi Gizi & Stunting</h1>
+                <h1 className="mb-6 text-xl font-bold text-blue-800 sm:text-2xl">📘 {selectedEbookId ? 'Edit E-Book' : 'Upload E-Book Edukasi'}</h1>
 
                 {/* --- FORM UPLOAD --- */}
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -164,7 +181,7 @@ export default function FormEbook({ editingEbook, ebooks }: Props) {
                             Deskripsi Singkat <span className="text-red-500">*</span>
                         </label>
                         <textarea
-                            placeholder="Tuliskan ringkasan isi e-book, misal: Berisi edukasi gizi pada 1000 HPK untuk cegah stunting."
+                            placeholder="Tuliskan ringkasan isi e-book..."
                             className="w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                             rows={4}
                             value={data.description}
@@ -174,28 +191,46 @@ export default function FormEbook({ editingEbook, ebooks }: Props) {
                     </div>
                     <div>
                         <label className="mb-1 block text-sm font-semibold text-gray-700">
-                            File E-Book (PDF) <span className="text-red-500">*</span>
+                            File E-Book (PDF) {selectedEbookId ? '(Opsional)' : <span className="text-red-500">*</span>}
                         </label>
                         <input
                             type="file"
                             accept="application/pdf"
                             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:font-semibold file:text-blue-700 hover:file:bg-blue-200"
-                            onChange={(e) => setData('file', e.target.files?.[0] || null)}
-                            aria-label="Upload file PDF e-book"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0] || null;
+                                if (file && file.size > 50 * 1024 * 1024) {
+                                    // 50MB
+                                    Swal.fire('Ukuran File Terlalu Besar', 'File PDF tidak boleh melebihi 50MB.', 'error');
+                                    e.target.value = '';
+                                    return;
+                                }
+                                setData('file', file);
+                            }}
                         />
-                        <p className="mt-1 text-xs text-gray-500">Format: PDF, maksimal 5MB</p>
+                        <p className="mt-1 text-xs text-gray-500">Format: PDF, maksimal 50MB</p>
                         {errors.file && <p className="mt-1 text-sm text-red-600">{errors.file}</p>}
                     </div>
                     <div>
-                        <label className="mb-1 block text-sm font-semibold text-gray-700">Cover E-Book (JPG/PNG)</label>
+                        <label className="mb-1 block text-sm font-semibold text-gray-700">
+                            Cover E-Book (JPG/PNG) {selectedEbookId ? '(Opsional)' : ''}
+                        </label>
                         <input
                             type="file"
                             accept="image/*"
                             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base file:mr-4 file:rounded-lg file:border-0 file:bg-cyan-100 file:px-4 file:py-2 file:font-semibold file:text-cyan-700 hover:file:bg-cyan-200"
-                            onChange={(e) => setData('cover', e.target.files?.[0] || null)}
-                            aria-label="Upload cover e-book"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0] || null;
+                                if (file && file.size > 5 * 1024 * 1024) {
+                                    // 5MB
+                                    Swal.fire('Ukuran File Terlalu Besar', 'Gambar cover tidak boleh melebihi 5MB.', 'error');
+                                    e.target.value = '';
+                                    return;
+                                }
+                                setData('cover', file);
+                            }}
                         />
-                        <p className="mt-1 text-xs text-gray-500">Format: JPG/PNG, maksimal 2MB</p>
+                        <p className="mt-1 text-xs text-gray-500">Format: JPG/PNG, maksimal 5MB</p>
                         {errors.cover && <p className="mt-1 text-sm text-red-600">{errors.cover}</p>}
                     </div>
                     {coverPreview && (
@@ -243,7 +278,6 @@ export default function FormEbook({ editingEbook, ebooks }: Props) {
                 {ebooks.length > 0 && (
                     <div className="mt-10">
                         <h2 className="mb-4 text-lg font-bold text-gray-800">📚 Daftar E-Book</h2>
-                        {/* Table wrapper agar bisa di-scroll di HP */}
                         <div className="overflow-x-auto rounded-lg border bg-white shadow">
                             <table className="w-full min-w-[650px] divide-y divide-gray-200 text-sm">
                                 <thead className="bg-blue-50 text-xs text-blue-700 uppercase">

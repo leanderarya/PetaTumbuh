@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class ArtikelController extends Controller
 {
-    // ... (method index, show, create tidak perlu diubah)
+    // Method untuk menampilkan semua artikel
     public function index()
     {
         $artikels = Artikel::latest()->get()->map(function ($artikel) {
@@ -17,7 +17,7 @@ class ArtikelController extends Controller
                 'id' => $artikel->id,
                 'title' => $artikel->title,
                 'description' => substr(strip_tags($artikel->content), 0, 150) . '...',
-                'image' => asset('storage/' . $artikel->image),
+                'image' => $artikel->image ? Storage::disk('public_uploads')->url($artikel->image) : null,
                 'date' => $artikel->date,
                 'is_new' => $artikel->is_new,
             ];
@@ -28,6 +28,7 @@ class ArtikelController extends Controller
         ]);
     }
 
+    // Method untuk menampilkan detail satu artikel
     public function show(Artikel $artikel)
     {
         $otherArticles = Artikel::where('id', '!=', $artikel->id)
@@ -35,7 +36,7 @@ class ArtikelController extends Controller
                                   ->limit(3)
                                   ->get(['id', 'title', 'image'])
                                   ->map(function ($item) {
-                                      $item->image = asset('storage/' . $item->image);
+                                      $item->image = $item->image ? Storage::disk('public_uploads')->url($item->image) : null;
                                       return $item;
                                   });
 
@@ -44,7 +45,7 @@ class ArtikelController extends Controller
                 'id' => $artikel->id,
                 'title' => $artikel->title,
                 'author' => $artikel->author,
-                'image' => asset('storage/' . $artikel->image),
+                'image' => $artikel->image ? Storage::disk('public_uploads')->url($artikel->image) : null,
                 'content' => $artikel->content,
                 'date' => $artikel->date,
             ],
@@ -52,6 +53,7 @@ class ArtikelController extends Controller
         ]);
     }
 
+    // Method untuk menampilkan halaman admin/create
     public function create()
     {
         $artikels = Artikel::latest()->get()->map(function ($artikel) {
@@ -59,7 +61,7 @@ class ArtikelController extends Controller
                 'id' => $artikel->id,
                 'title' => $artikel->title,
                 'description' => substr(strip_tags($artikel->content), 0, 100) . '...',
-                'image' => asset('storage/' . $artikel->image),
+                'image' => $artikel->image ? Storage::disk('public_uploads')->url($artikel->image) : null,
                 'author' => $artikel->author,
                 'date' => $artikel->date,
                 'content' => $artikel->content,
@@ -72,10 +74,7 @@ class ArtikelController extends Controller
         ]);
     }
 
-
-    /**
-     * Menyimpan artikel baru ke database.
-     */
+    // Method untuk menyimpan artikel baru
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -88,9 +87,8 @@ class ArtikelController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // PERBAIKAN: Simpan path lengkap (folder + nama file)
-            $imagePath = $request->file('image')->store('artikels', 'public');
-            $validatedData['image'] = $imagePath; // Hapus basename()
+            $imagePath = $request->file('image')->store('artikels', 'public_uploads');
+            $validatedData['image'] = $imagePath;
         }
 
         Artikel::create($validatedData);
@@ -98,11 +96,7 @@ class ArtikelController extends Controller
         return redirect()->route('artikel.create')->with('message', 'Artikel berhasil ditambahkan!');
     }
 
-    /**
-     * Memperbarui data artikel yang sudah ada di database.
-     */
-    // app/Http/Controllers/ArtikelController.php
-
+    // Method untuk memperbarui artikel
     public function update(Request $request, Artikel $artikel)
     {
         $validatedData = $request->validate([
@@ -111,40 +105,29 @@ class ArtikelController extends Controller
             'date' => 'required|date',
             'content' => 'required|string',
             'is_new' => 'boolean',
-            // Gambar tidak wajib saat update
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
         ]);
 
-        // Cek jika ada file gambar baru yang di-upload
         if ($request->hasFile('image')) {
-            // Hapus gambar lama dari storage
             if ($artikel->image) {
-                Storage::disk('public')->delete($artikel->image);
+                Storage::disk('public_uploads')->delete($artikel->image);
             }
-
-            // Simpan gambar baru dan update nama filenya
-            $imagePath = $request->file('image')->store('artikels', 'public');
+            $imagePath = $request->file('image')->store('artikels', 'public_uploads');
             $validatedData['image'] = $imagePath;
         } else {
-            // **INI BAGIAN PENTINGNYA**
-            // Jika tidak ada gambar baru, hapus 'image' dari data yang akan di-update
-            // agar nilai lama di database tidak ditimpa dengan null.
             unset($validatedData['image']);
         }
 
-        // Update data artikel di database
         $artikel->update($validatedData);
 
         return redirect()->route('artikel.create')->with('message', 'Artikel berhasil diperbarui!');
     }
 
-    /**
-     * Menghapus artikel dari database.
-     */
+    // Method untuk menghapus artikel
     public function destroy(Artikel $artikel)
     {
         if ($artikel->image) {
-            Storage::disk('public')->delete($artikel->image); // Hapus path lengkap
+            Storage::disk('public_uploads')->delete($artikel->image);
         }
 
         $artikel->delete();

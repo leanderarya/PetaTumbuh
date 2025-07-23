@@ -17,23 +17,33 @@ Route::get('/artikel/{artikel}', [ArtikelController::class, 'show'])->name('arti
 
 
 // Bagian Petugas Kesehatan
-Route::middleware(['auth', 'verified'])->group(function () {
+
+// Gunakan ->prefix('tambuh') untuk menerapkan prefix ke semua route di dalam grup
+// Hapus '/tambuh' dari setiap route individual untuk menghindari duplikasi (contoh: /tambuh/tambuh/artikel)
+Route::middleware(['auth', 'verified'])->prefix('tambuh')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/artikel/{artikel}', [ArtikelController::class, 'update'])->name('artikel.update');
-    Route::delete('/artikel/{artikel}', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
-    Route::get('/tambah-artikel/create', [ArtikelController::class, 'create'])->name('artikel.create');
-    Route::post('/tambah-artikel', [ArtikelController::class, 'store'])->name('artikel.store');
-    Route::get('/upload-ebook', [EbookController::class, 'petugasIndex'])->name('ebooks.petugasIndex');
-    Route::post('/upload-ebook', [EbookController::class, 'store'])->name('ebooks.store');
-    Route::get('/ebooks/{id}/edit', [EbookController::class, 'edit'])->name('ebooks.edit');
-    Route::put('/ebooks/{id}', [EbookController::class, 'update'])->name('ebooks.update');
-    Route::delete('/ebooks/{id}', [EbookController::class, 'destroy'])->name('ebooks.destroy');
-    Route::get('/daftaranak', [ChildController::class, 'index'])->name('children.index');
-    Route::post('/daftaranak', [ChildController::class, 'store'])->name('children.store');
-    Route::delete('/daftaranak/{id}', [ChildController::class, 'destroy'])->name('children.destroy');
-    Route::put('/daftaranak/{id}', [ChildController::class, 'update'])->name('children.update');
-    Route::get('/perkembangan-gizi', [PerkembanganGiziController::class, 'index'])->name('perkembangangizi.index');
-    Route::post('/perkembangan-gizi', [PerkembanganGiziController::class, 'store'])->name('perkembangangizi.store');
+
+    // Route Artikel
+    Route::get('artikel/create', [ArtikelController::class, 'create'])->name('artikel.create');
+    Route::post('artikel', [ArtikelController::class, 'store'])->name('artikel.store');
+    Route::post('artikel/{artikel}', [ArtikelController::class, 'update'])->name('artikel.update');
+    Route::delete('artikel/{artikel}', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
+
+    // Route E-Book
+    Route::get('upload-ebook', [EbookController::class, 'petugasIndex'])->name('ebooks.petugasIndex');
+    Route::post('upload-ebook', [EbookController::class, 'store'])->name('ebooks.store');
+    Route::get('ebooks/{id}/edit', [EbookController::class, 'edit'])->name('ebooks.edit');
+    Route::put('ebooks/{id}', [EbookController::class, 'update'])->name('ebooks.update');
+    Route::delete('ebooks/{id}', [EbookController::class, 'destroy'])->name('ebooks.destroy');
+
+    // Route Daftar Anak
+    Route::get('daftaranak', [ChildController::class, 'index'])->name('children.index');
+    Route::post('daftaranak', [ChildController::class, 'store'])->name('children.store');
+    Route::put('daftaranak/{id}', [ChildController::class, 'update'])->name('children.update');
+    Route::delete('daftaranak/{id}', [ChildController::class, 'destroy'])->name('children.destroy');
+    
+    // Route::get('perkembangan-gizi', [PerkembanganGiziController::class, 'index'])->name('perkembangangizi.index');
+    // Route::post('perkembangan-gizi', [PerkembanganGiziController::class, 'store'])->name('perkembangangizi.store');
 });
 
 require __DIR__.'/settings.php';

@@ -223,8 +223,9 @@ const Beranda: React.FC<{ dusunStats: DusunStat[]; artikels: ArtikelPreview[] }>
                     </div>
                 </div>
                 {/* Info dan Peta Section */}
-                <div id="peta-interaktif" className="mb-10 flex flex-col gap-10 md:flex-row">
+                <div id="peta-interaktif" className="mb-10 flex flex-col gap-10 md:flex-row md:items-start">
                     {/* Kolom Kiri: Penjelasan */}
+                    {/* Ganti seluruh konten div ini dengan kode di bawah */}
                     <div className="w-full rounded-xl bg-white p-6 shadow-lg md:w-1/2">
                         <h2 className="mb-5 text-3xl leading-tight font-extrabold text-gray-800 sm:text-4xl">
                             Mengenal Stunting, Melindungi Masa Depan
@@ -235,15 +236,42 @@ const Beranda: React.FC<{ dusunStats: DusunStat[]; artikels: ArtikelPreview[] }>
                             memengaruhi kecerdasan dan produktivitas mereka di masa depan.
                         </p>
 
+                        {/* === KONTEN TAMBAHAN 1 === */}
+                        <h4 className="mt-8 mb-3 text-xl font-bold text-gray-800">Pentingnya 1000 Hari Pertama Kehidupan (HPK)</h4>
+                        <p className="text-justify text-lg leading-relaxed font-medium text-gray-700">
+                            Periode emas dari masa kehamilan hingga anak berusia dua tahun adalah jendela kritis. Kekurangan gizi pada masa ini dapat
+                            menyebabkan kerusakan yang sulit diperbaiki. Oleh karena itu, intervensi dan pemantauan dini melalui platform seperti ini
+                            menjadi kunci utama keberhasilan kita.
+                        </p>
+                        {/* ======================= */}
+
                         <h3 className="mt-8 mb-4 text-2xl leading-tight font-semibold text-gray-800 sm:text-3xl">
                             Misi Kita Bersama di Kalangdosari
                         </h3>
-                        <p className="text-justify text-lg leading-relaxed font-medium text-gray-700">
+                        <p className="mb-6 text-justify text-lg leading-relaxed font-medium text-gray-700">
                             Melalui platform ini, kita memetakan kondisi gizi di setiap dusun secara akurat. Data ini bukanlah sekadar angka,
                             melainkan panduan bagi kita untuk mengambil tindakan yang cepat dan tepat sasaran. Dengan pemantauan rutin dan akses ke
                             sumber edukasi, kita berdaya untuk memastikan setiap anak mendapatkan awal terbaik dalam hidupnya dan tumbuh menjadi
                             generasi yang sehat dan cerdas.
                         </p>
+
+                        {/* === KONTEN TAMBAHAN 2 === */}
+                        <h4 className="mt-8 mb-4 text-xl font-bold text-gray-800">Bagaimana Anda Dapat Berperan?</h4>
+                        <ul className="list-disc space-y-2 pl-5 text-lg font-medium text-gray-700">
+                            <li>
+                                <b>Pantau Rutin:</b> Pastikan anak Anda mendapatkan pemantauan pertumbuhan dan perkembangan secara berkala di
+                                Posyandu.
+                            </li>
+                            <li>
+                                <b>Edukasi Diri:</b> Manfaatkan artikel dan e-book yang kami sediakan untuk menambah wawasan mengenai gizi seimbang
+                                dan pola asuh yang tepat.
+                            </li>
+                            <li>
+                                <b>Aksi Nyata:</b> Terapkan pengetahuan yang didapat dalam kehidupan sehari-hari untuk mendukung tumbuh kembang
+                                optimal anak.
+                            </li>
+                        </ul>
+                        {/* ======================= */}
                     </div>
 
                     {/* Kolom Kanan: Slideshow Peta */}

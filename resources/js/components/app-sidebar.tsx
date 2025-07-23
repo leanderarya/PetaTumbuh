@@ -10,17 +10,17 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: route('dashboard'),
         icon: LayoutGrid,
     },
     {
         title: 'Daftar Anak',
-        href: '/daftaranak',
+        href: route('children.index'),
         icon: PackageSearch,
     },
     {
         title: 'Manajemen E-Book',
-        href: '/upload-ebook',
+        href: route('ebooks.petugasIndex'),
         icon: Heart,
     },
     {

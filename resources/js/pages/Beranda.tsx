@@ -11,7 +11,7 @@ type ArtikelPreview = { id: number; title: string; description: string; image: s
 const SlideshowWithDescription: React.FC = () => {
     const slides = [
         {
-            src: '/storage/peta-persebaran.png', // Ganti dengan path gambar Anda, misal: '/storage/gambar-4135x5849.jpg'
+            src: '/storage/peta-persebaran1.png', // Ganti dengan path gambar Anda, misal: '/storage/gambar-4135x5849.jpg'
             description: 'Data pemantauan bulan April 2025.',
             month: 'April 2025',
         },

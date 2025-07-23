@@ -11,19 +11,19 @@ type ArtikelPreview = { id: number; title: string; description: string; image: s
 const SlideshowWithDescription: React.FC = () => {
     const slides = [
         {
-            src: '/storage/peta-persebaran.jpeg',
-            description: 'Data pemantauan bulan Mei 2025. Ini menjadi acuan awal untuk program intervensi gizi.',
-            month: 'Mei 2025',
+            src: '/storage/peta-persebaran.png', // Ganti dengan path gambar Anda, misal: '/storage/gambar-4135x5849.jpg'
+            description: 'Data pemantauan bulan April 2025.',
+            month: 'April 2025',
         },
         {
             src: '/storage/peta-persebaran2.png',
-            description: 'Memasuki bulan Juni, hasil intervensi mulai menunjukkan perubahan positif pada beberapa dusun prioritas.',
-            month: 'Juni 2025',
+            description: 'Data pemantauan bulan Mei 2025.',
+            month: 'Mei 2025',
         },
         {
-            src: '/storage/peta-persebaran3.jpeg',
-            description: 'Data terkini bulan Juli. Upaya bersama kita terus berlanjut untuk mewujudkan generasi bebas stunting.',
-            month: 'Juli 2025',
+            src: '/storage/peta-persebaran3.png',
+            description: 'Data pemantauan bulan Juni 2025.',
+            month: 'Juni 2025',
         },
     ];
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -38,15 +38,20 @@ const SlideshowWithDescription: React.FC = () => {
     return (
         <div>
             <p className="mb-2 h-16 text-base text-gray-700 md:h-14">{slides[currentIndex].description}</p>
-            <div className="relative aspect-[3/2] w-full">
-                <div className="h-full w-full overflow-hidden rounded-lg shadow-lg">
-                    <img
-                        src={slides[currentIndex].src}
-                        alt={`Peta Persebaran ${slides[currentIndex].month}`}
-                        className="h-full w-full object-cover transition-all duration-300"
-                        style={{ aspectRatio: '3/2' }}
-                    />
-                </div>
+            {/* Container diubah agar tidak ada aspect-ratio tetap */}
+            <div className="relative w-full">
+                {/* Struktur gambar disederhanakan.
+                  - `w-full` membuat lebar gambar penuh.
+                  - `h-auto` membuat tinggi gambar menyesuaikan secara otomatis sesuai aspek rasio aslinya.
+                  - `object-contain` memastikan seluruh bagian gambar terlihat.
+                  - `rounded-lg shadow-lg` dipindahkan langsung ke gambar.
+                  - style inline `aspectRatio` dihapus.
+                */}
+                <img
+                    src={slides[currentIndex].src}
+                    alt={`Peta Persebaran ${slides[currentIndex].month}`}
+                    className="h-auto w-full rounded-lg object-contain shadow-lg transition-all duration-300"
+                />
                 <div className="absolute right-3 bottom-3 rounded-full bg-black/60 px-3 py-1 text-sm font-bold text-white backdrop-blur-sm">
                     {slides[currentIndex].month}
                 </div>

@@ -51,7 +51,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     <div className="absolute inset-0 bg-black/50" />
                     <div className="relative z-20 flex items-center text-lg font-medium">
                         <img src="/storage/logo.png" alt="P2SA Logo" className="mr-2 h-10 w-10 object-contain" />
-                        P2SA Kalangdosari
+                        Peta Tumbuh Kalangdosari
                     </div>
                     <div className="relative z-20 mt-auto">
                         <blockquote className="space-y-2">
@@ -69,69 +69,80 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     className="flex min-h-screen items-center justify-center bg-cover bg-center p-4 lg:py-12"
                     style={{ backgroundImage: "url('/storage/bg-test.png')" }}
                 >
-                    <div className="mx-auto w-full max-w-sm gap-6 rounded-xl border bg-white/90 p-8 shadow-2xl backdrop-blur-sm">
-                        <div className="grid gap-2 text-center">
-                            <h1 className="text-3xl font-bold">Login Petugas</h1>
-                            <p className="text-balance text-muted-foreground">Masukkan email dan password Anda untuk mengakses dashboard.</p>
+                    <div className="mx-auto w-full max-w-md gap-6 rounded-xl border bg-white/80 p-10 shadow-xl backdrop-blur-sm">
+                        <div className="grid gap-4 text-center">
+                            <h1 className="text-3xl font-bold text-blue-700">Login Petugas</h1>
+                            <p className="text-sm text-gray-600">Masukkan email dan password Anda untuk mengakses dashboard.</p>
                         </div>
 
-                        <form className="mt-6 grid gap-4" onSubmit={submit}>
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="email"
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
-                                        <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                            Lupa password?
-                                        </TextLink>
-                                    )}
+                        <form className="mt-8 space-y-6" onSubmit={submit}>
+                            <div className="grid gap-4">
+                                <div>
+                                    <Label htmlFor="email" className="text-lg">
+                                        Email
+                                    </Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        required
+                                        autoFocus
+                                        autoComplete="email"
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
+                                        placeholder="email@example.com"
+                                        className="w-full rounded-md border-2 border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <InputError message={errors.email} />
                                 </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
+
+                                <div>
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor="password" className="text-lg">
+                                            Password
+                                        </Label>
+                                        {canResetPassword && (
+                                            <TextLink href={route('password.request')} className="text-sm text-blue-500 hover:underline">
+                                                Lupa password?
+                                            </TextLink>
+                                        )}
+                                    </div>
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        required
+                                        autoComplete="current-password"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        placeholder="Password"
+                                        className="w-full rounded-md border-2 border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <InputError message={errors.password} />
+                                </div>
+
+                                <div className="flex items-center space-x-3">
+                                    <Checkbox
+                                        id="remember"
+                                        name="remember"
+                                        checked={data.remember}
+                                        onClick={() => setData('remember', !data.remember)}
+                                        className="h-5 w-5"
+                                    />
+                                    <Label htmlFor="remember" className="text-sm">
+                                        Ingat saya
+                                    </Label>
+                                </div>
+
+                                <Button
+                                    type="submit"
+                                    className="w-full rounded-md bg-blue-600 py-3 text-lg text-white transition-colors hover:bg-blue-700"
+                                >
+                                    {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                    Login
+                                </Button>
                             </div>
 
-                            <div className="flex items-center space-x-3">
-                                <Checkbox
-                                    id="remember"
-                                    name="remember"
-                                    checked={data.remember}
-                                    onClick={() => setData('remember', !data.remember)}
-                                    tabIndex={3}
-                                />
-                                <Label htmlFor="remember">Ingat saya</Label>
-                            </div>
-
-                            <Button type="submit" className="w-full bg-blue-600 text-white hover:bg-blue-700" tabIndex={4} disabled={processing}>
-                                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                                Login
-                            </Button>
+                            {status && <div className="mt-4 text-center text-sm font-medium text-green-600">{status}</div>}
                         </form>
-
-                        {status && <div className="mt-4 text-center text-sm font-medium text-green-600">{status}</div>}
                     </div>
                 </div>
             </div>

@@ -131,7 +131,7 @@ const Beranda: React.FC<{ dusunStats: DusunStat[]; artikels: ArtikelPreview[] }>
             className="flex min-h-screen flex-col bg-gray-50 px-2 pt-2 sm:px-4 sm:pt-4 md:px-8"
             style={{ backgroundImage: "url('/storage/bg-test.png')" }}
         >
-            <Head title="P3SA - Beranda" />
+            <Head title="Beranda" />
             {/* Navbar */}
             <nav className="sticky top-0 right-0 left-0 z-50 mx-auto mb-2 w-full max-w-5xl bg-white/80 shadow-md backdrop-blur-md md:rounded-full">
                 {/* Padding vertikal diubah dari py-3 menjadi py-4 */}

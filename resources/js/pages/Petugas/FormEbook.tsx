@@ -125,7 +125,7 @@ export default function FormEbook({ editingEbook, ebooks }: Props) {
             cancelButtonText: 'Batal',
         }).then((result) => {
             if (result.isConfirmed) {
-                router.delete(`/ebooks/${id}`, {
+                router.delete(route('ebooks.destroy', id), {
                     onSuccess: () => {
                         Swal.fire('Berhasil!', 'E-Book telah dihapus.', 'success');
                     },

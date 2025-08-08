@@ -39,8 +39,8 @@ Route::middleware(['auth', 'verified'])->prefix('tambuh')->group(function () {
     // Route Daftar Anak
     Route::get('daftaranak', [ChildController::class, 'index'])->name('children.index');
     Route::post('daftaranak', [ChildController::class, 'store'])->name('children.store');
-    Route::put('daftaranak/{id}', [ChildController::class, 'update'])->name('children.update');
-    Route::delete('daftaranak/{id}', [ChildController::class, 'destroy'])->name('children.destroy');
+    Route::put('daftaranak/{child}', [ChildController::class, 'update'])->name('children.update');
+    Route::delete('daftaranak/{child}', [ChildController::class, 'destroy'])->name('children.destroy');
     
     // Route::get('perkembangan-gizi', [PerkembanganGiziController::class, 'index'])->name('perkembangangizi.index');
     // Route::post('perkembangan-gizi', [PerkembanganGiziController::class, 'store'])->name('perkembangangizi.store');
